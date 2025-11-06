@@ -1,5 +1,11 @@
 # @jjuidev/node-devtools
 
+## 1.4.0
+
+### Minor Changes
+
+- Add interactive setup with typescript alias question
+
 ## 1.2.2
 
 ### Patch Changes
