@@ -2,10 +2,10 @@ import consola from 'consola';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import pc from 'picocolors';
-import prompts from 'prompts';
 
+import { SetupAnswers } from '../types/setup.js';
 import { detectPackageManager, installPackages } from '../utils/package-manager.js';
-import { runInteractiveSetup } from './interactive-setup.js';
+import { executeSetup } from './interactive-setup.js';
 
 interface TsConfig {
 	compilerOptions: {
@@ -23,9 +23,6 @@ interface PackageJson {
 	[key: string]: any;
 }
 
-/**
- * Create basic tsconfig.json for Node.js project
- */
 const createTsConfig = (): void => {
 	const cwd = process.cwd();
 	const tsconfigPath = join(cwd, 'tsconfig.json');
@@ -51,9 +48,6 @@ const createTsConfig = (): void => {
 	consola.success('✓ Created tsconfig.json');
 };
 
-/**
- * Update package.json with Node.js specific configuration
- */
 const updatePackageJson = (): void => {
 	const cwd = process.cwd();
 	const packageJsonPath = join(cwd, 'package.json');
@@ -65,7 +59,6 @@ const updatePackageJson = (): void => {
 
 	const packageJson: PackageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
-	// Add main entry
 	if (!packageJson.main) {
 		packageJson.main = './dist/main.js';
 		consola.success('✓ Added main entry to package.json');
@@ -73,7 +66,6 @@ const updatePackageJson = (): void => {
 		consola.warn('⚠️  main entry already exists, skipping');
 	}
 
-	// Add scripts
 	if (!packageJson.scripts) {
 		packageJson.scripts = {};
 	}
@@ -100,9 +92,6 @@ const updatePackageJson = (): void => {
 	}
 };
 
-/**
- * Install TypeScript and Node.js development dependencies
- */
 const installNodeDevDependencies = (pm: string): void => {
 	const packages = ['typescript', 'ts-node-dev', 'tsconfig-paths', 'tsc-alias'];
 
@@ -112,9 +101,6 @@ const installNodeDevDependencies = (pm: string): void => {
 	consola.success('✓ Installed TypeScript and Node.js dev dependencies\n');
 };
 
-/**
- * Main function to setup Node.js project
- */
 export const setupNodejsProject = async (): Promise<void> => {
 	consola.box({
 		title: '🚀 Node.js Project Setup',
@@ -136,19 +122,15 @@ export const setupNodejsProject = async (): Promise<void> => {
 	consola.start(`${pmIcons[pm] || '📦'} Detected package manager: ${pc.cyan(pm)}\n`);
 
 	try {
-		// Step 1: Create tsconfig.json
 		consola.info('📝 Step 1/4: Creating tsconfig.json...');
 		createTsConfig();
 
-		// Step 2: Update package.json
 		consola.info('\n📄 Step 2/4: Updating package.json...');
 		updatePackageJson();
 
-		// Step 3: Install dependencies
 		consola.info('\n📦 Step 3/4: Installing dependencies...');
 		installNodeDevDependencies(pm);
 
-		// Step 4: Run interactive setup
 		consola.box({
 			title: '✨ Basic Setup Complete',
 			message: [
@@ -156,7 +138,7 @@ export const setupNodejsProject = async (): Promise<void> => {
 				`${pc.green('✓')} Package.json updated`,
 				`${pc.green('✓')} Dev dependencies installed`,
 				'',
-				`${pc.cyan('Next:')} Configure linting, formatting, and git hooks...`
+				`${pc.cyan('Next:')} Configuring linting, formatting, and git hooks...`
 			].join('\n'),
 			style: {
 				borderColor: 'blue',
@@ -165,27 +147,15 @@ export const setupNodejsProject = async (): Promise<void> => {
 			}
 		});
 
-		const { continueSetup } = await prompts(
-			{
-				type: 'confirm',
-				name: 'continueSetup',
-				message: '🎨 Continue with interactive setup (ESLint, Prettier, Commitlint, Husky)?',
-				initial: true
-			},
-			{
-				onCancel: () => {
-					consola.info('\n👋 Setup completed. You can run the setup later with: npx @jjuidev/node-devtools\n');
-					process.exit(0);
-				}
-			}
-		);
+		const setupAnswers: SetupAnswers = {
+			framework: 'node',
+			useTailwind: false,
+			useStorybook: false,
+			useTypescriptAlias: true
+		};
 
-		if (continueSetup) {
-			consola.info('\n🔧 Step 4/4: Running interactive setup...\n');
-			await runInteractiveSetup();
-		} else {
-			consola.info('\n👋 Setup completed!\n');
-		}
+		consola.info('\n🔧 Step 4/4: Running devtools setup (Node.js + TypeScript alias)...\n');
+		await executeSetup(setupAnswers);
 	} catch (error) {
 		consola.error('❌ Setup failed');
 		if (error instanceof Error) {

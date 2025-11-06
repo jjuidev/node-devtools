@@ -10,7 +10,7 @@ import { initHusky } from './init-husky.js';
 import { setupEslint } from './setup-eslint.js';
 import { setupTypescriptAlias } from './setup-typescript-alias.js';
 
-export const runInteractiveSetup = async (): Promise<void> => {
+const promptSetupAnswers = async (): Promise<SetupAnswers> => {
 	consola.box({
 		title: '🛠️  Node DevTools Setup',
 		message: 'Interactive configuration for your development environment',
@@ -63,13 +63,15 @@ export const runInteractiveSetup = async (): Promise<void> => {
 		}
 	);
 
-	const setupAnswers: SetupAnswers = {
+	return {
 		framework: answers.framework || 'node',
 		useTailwind: answers.useTailwind || false,
 		useStorybook: answers.useStorybook || false,
 		useTypescriptAlias: answers.useTypescriptAlias || false
 	};
+};
 
+export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> => {
 	const frameworkLabels = {
 		node: '📦 Node.js',
 		react: '⚛️  React',
@@ -212,4 +214,9 @@ export const runInteractiveSetup = async (): Promise<void> => {
 		}
 		process.exit(1);
 	}
+};
+
+export const runInteractiveSetup = async (): Promise<void> => {
+	const answers = await promptSetupAnswers();
+	await executeSetup(answers);
 };
