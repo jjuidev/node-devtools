@@ -8,6 +8,7 @@ import { getPackagesToInstall } from '../utils/package-lists.js';
 import { detectPackageManager, installPackages } from '../utils/package-manager.js';
 import { initHusky } from './init-husky.js';
 import { setupEslint } from './setup-eslint.js';
+import { setupTypescriptAlias } from './setup-typescript-alias.js';
 
 export const runInteractiveSetup = async (): Promise<void> => {
 	consola.box({
@@ -46,6 +47,12 @@ export const runInteractiveSetup = async (): Promise<void> => {
 				name: 'useStorybook',
 				message: '📚 Are you using Storybook?',
 				initial: false
+			},
+			{
+				type: 'confirm',
+				name: 'useTypescriptAlias',
+				message: '📂 Do you want to use TypeScript alias imports?',
+				initial: false
 			}
 		],
 		{
@@ -59,7 +66,8 @@ export const runInteractiveSetup = async (): Promise<void> => {
 	const setupAnswers: SetupAnswers = {
 		framework: answers.framework || 'node',
 		useTailwind: answers.useTailwind || false,
-		useStorybook: answers.useStorybook || false
+		useStorybook: answers.useStorybook || false,
+		useTypescriptAlias: answers.useTypescriptAlias || false
 	};
 
 	const frameworkLabels = {
@@ -79,6 +87,8 @@ export const runInteractiveSetup = async (): Promise<void> => {
 		summaryLines.push(`🎨 Tailwind CSS: ${setupAnswers.useTailwind ? pc.green('✓ Yes') : pc.gray('✗ No')}`);
 		summaryLines.push(`📚 Storybook: ${setupAnswers.useStorybook ? pc.green('✓ Yes') : pc.gray('✗ No')}`);
 	}
+
+	summaryLines.push(`📂 TypeScript Alias: ${setupAnswers.useTypescriptAlias ? pc.green('✓ Yes') : pc.gray('✗ No')}`);
 
 	consola.box({
 		title: '📋 Configuration Summary',
@@ -165,6 +175,10 @@ export const runInteractiveSetup = async (): Promise<void> => {
 		setupCommitlint();
 		setupEslint(setupAnswers);
 		initHusky();
+
+		if (setupAnswers.useTypescriptAlias) {
+			setupTypescriptAlias();
+		}
 
 		consola.box({
 			title: '✨ Setup Complete',

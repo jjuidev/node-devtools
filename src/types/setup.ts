@@ -4,6 +4,7 @@ export interface SetupAnswers {
 	framework: Framework;
 	useTailwind: boolean;
 	useStorybook: boolean;
+	useTypescriptAlias: boolean;
 }
 
 export interface PackageToInstall {
