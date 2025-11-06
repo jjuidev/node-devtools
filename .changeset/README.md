@@ -31,9 +31,11 @@ npm run changeset
 This will ask you:
 
 1. **Which packages should be bumped?**
+
    - Select `@jjuidev/node-devtools`
 
 2. **What type of change is this?**
+
    - `major` - Breaking changes (users need to update their code)
    - `minor` - New features (backwards compatible)
    - `patch` - Bug fixes and minor improvements
@@ -74,11 +76,13 @@ npm run changeset
 ## Publishing Flow
 
 1. Make changes and create changeset
+
    ```bash
    npm run changeset
    ```
 
 2. Update versions and CHANGELOG
+
    ```bash
    npm run version
    ```
