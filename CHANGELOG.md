@@ -4,6 +4,12 @@
 
 ### Minor Changes
 
+- Add script setup nodejs.
+
+## 1.3.0
+
+### Minor Changes
+
 - Add interactive setup with typescript alias question
 
 ## 1.2.2
