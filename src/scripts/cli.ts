@@ -6,7 +6,7 @@ import { setupNodejsProject } from './setup-nodejs.js';
 program
 	.name('node-devtools')
 	.description('Interactive devtools (commitlint, eslint, prettier,...) setup for Node.js projects')
-	.version('1.4.0');
+	.version('1.4.5');
 
 // Default command - Interactive setup
 program
