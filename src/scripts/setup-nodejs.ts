@@ -59,12 +59,7 @@ const updatePackageJson = (): void => {
 
 	const packageJson: PackageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
 
-	if (!packageJson.main) {
-		packageJson.main = './dist/main.js';
-		consola.success('✓ Added main entry to package.json');
-	} else {
-		consola.warn('⚠️  main entry already exists, skipping');
-	}
+	packageJson.main = './dist/main.js';
 
 	if (!packageJson.scripts) {
 		packageJson.scripts = {};
