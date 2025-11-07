@@ -26,7 +26,7 @@ export const setupTypescriptAlias = () => {
 		// Add or update baseUrl and paths
 		tsconfig.compilerOptions.baseUrl = 'src';
 		tsconfig.compilerOptions.paths = {
-			'@/*': ['./*']
+			'@/*': ['./*'],
 		};
 
 		// Write back to file with proper formatting
@@ -37,6 +37,7 @@ export const setupTypescriptAlias = () => {
 		consola.info(`  ${pc.gray('•')} paths: ${pc.green('{ "@/*": ["./*"] }')}\n`);
 	} catch (error) {
 		consola.error('Failed to update tsconfig.json');
+
 		if (error instanceof Error) {
 			consola.error(error.message);
 		}

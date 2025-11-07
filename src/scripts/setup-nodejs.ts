@@ -1,11 +1,12 @@
-import consola from 'consola';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
+
+import consola from 'consola';
 import pc from 'picocolors';
 
+import { executeSetup } from './interactive-setup.js';
 import { SetupAnswers } from '../types/setup.js';
 import { detectPackageManager, installPackages } from '../utils/package-manager.js';
-import { executeSetup } from './interactive-setup.js';
 
 interface TsConfig {
 	compilerOptions: {
@@ -72,6 +73,7 @@ const updatePackageJson = (): void => {
 	};
 
 	let scriptsAdded = false;
+
 	for (const [name, command] of Object.entries(scriptsToAdd)) {
 		if (!packageJson.scripts[name]) {
 			packageJson.scripts[name] = command;
@@ -107,6 +109,7 @@ export const setupNodejsProject = async (): Promise<void> => {
 	});
 
 	const pm = detectPackageManager();
+
 	const pmIcons: Record<string, string> = {
 		npm: '📦',
 		yarn: '🧶',
@@ -153,9 +156,11 @@ export const setupNodejsProject = async (): Promise<void> => {
 		await executeSetup(setupAnswers);
 	} catch (error) {
 		consola.error('❌ Setup failed');
+
 		if (error instanceof Error) {
 			consola.error(error.message);
 		}
+
 		process.exit(1);
 	}
 };

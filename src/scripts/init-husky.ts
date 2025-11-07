@@ -27,7 +27,7 @@ export const initHusky = (): void => {
 npx devmoji --edit --lint --config ./.commitlintrc.cjs
 `,
 			emoji: '📝',
-			description: 'Add emoji to commit messages'
+			description: 'Add emoji to commit messages',
 		},
 		{
 			name: 'commit-msg',
@@ -35,7 +35,7 @@ npx devmoji --edit --lint --config ./.commitlintrc.cjs
 npx --no -- commitlint --edit $1
 `,
 			emoji: '✅',
-			description: 'Validate commit messages'
+			description: 'Validate commit messages',
 		},
 		{
 			name: 'pre-commit',
@@ -43,14 +43,15 @@ npx --no -- commitlint --edit $1
 npx lint-staged
 `,
 			emoji: '🚀',
-			description: 'Run linters on staged files'
-		}
+			description: 'Run linters on staged files',
+		},
 	];
 
 	consola.start('Creating git hooks...\n');
 
 	hooks.forEach(({ name, content, emoji, description }) => {
 		const hookPath = join(huskyDir, name);
+
 		writeFileSync(hookPath, content, { mode: 0o755 });
 		consola.success(`${emoji} ${pc.bold(name)} - ${pc.gray(description)}`);
 	});

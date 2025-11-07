@@ -2,13 +2,13 @@ import consola from 'consola';
 import pc from 'picocolors';
 import prompts from 'prompts';
 
+import { initHusky } from './init-husky.js';
+import { setupEslint } from './setup-eslint.js';
+import { setupTypescriptAlias } from './setup-typescript-alias.js';
 import { setupCommitlint } from '../scripts/setup-commitlint.js';
 import { SetupAnswers } from '../types/setup.js';
 import { getPackagesToInstall } from '../utils/package-lists.js';
 import { detectPackageManager, installPackages } from '../utils/package-manager.js';
-import { initHusky } from './init-husky.js';
-import { setupEslint } from './setup-eslint.js';
-import { setupTypescriptAlias } from './setup-typescript-alias.js';
 
 const promptSetupAnswers = async (): Promise<SetupAnswers> => {
 	consola.box({
@@ -16,8 +16,8 @@ const promptSetupAnswers = async (): Promise<SetupAnswers> => {
 		message: 'Interactive configuration for your development environment',
 		style: {
 			borderColor: 'cyan',
-			borderStyle: 'rounded'
-		}
+			borderStyle: 'rounded',
+		},
 	});
 
 	consola.info("Let's configure your development tools!\n");
@@ -29,45 +29,57 @@ const promptSetupAnswers = async (): Promise<SetupAnswers> => {
 				name: 'framework',
 				message: '🚀 Which framework do you use?',
 				choices: [
-					{ title: '📦 Node.js', value: 'node' },
-					{ title: '⚛️  React', value: 'react' },
-					{ title: '📱 React Native', value: 'react-native' },
-					{ title: '▲  Next.js', value: 'next' }
+					{
+						title: '📦 Node.js',
+						value: 'node',
+					},
+					{
+						title: '⚛️  React',
+						value: 'react',
+					},
+					{
+						title: '📱 React Native',
+						value: 'react-native',
+					},
+					{
+						title: '▲  Next.js',
+						value: 'next',
+					},
 				],
-				initial: 0
+				initial: 0,
 			},
 			{
 				type: (prev, values) => (values.framework === 'react' || values.framework === 'next' ? 'confirm' : null),
 				name: 'useTailwind',
 				message: '🎨 Are you using Tailwind CSS?',
-				initial: false
+				initial: false,
 			},
 			{
 				type: (prev, values) => (values.framework === 'react' || values.framework === 'next' ? 'confirm' : null),
 				name: 'useStorybook',
 				message: '📚 Are you using Storybook?',
-				initial: false
+				initial: false,
 			},
 			{
 				type: 'confirm',
 				name: 'useTypescriptAlias',
 				message: '📂 Do you want to use TypeScript alias imports?',
-				initial: false
-			}
+				initial: false,
+			},
 		],
 		{
 			onCancel: () => {
 				consola.warn('\nSetup cancelled by user');
 				process.exit(0);
-			}
-		}
+			},
+		},
 	);
 
 	return {
 		framework: answers.framework || 'node',
 		useTailwind: answers.useTailwind || false,
 		useStorybook: answers.useStorybook || false,
-		useTypescriptAlias: answers.useTypescriptAlias || false
+		useTypescriptAlias: answers.useTypescriptAlias || false,
 	};
 };
 
@@ -76,7 +88,7 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 		node: '📦 Node.js',
 		react: '⚛️  React',
 		'react-native': '📱 React Native',
-		next: '▲  Next.js'
+		next: '▲  Next.js',
 	};
 
 	const summaryLines = [`🚀 Framework: ${pc.cyan(frameworkLabels[setupAnswers.framework])}`];
@@ -98,8 +110,8 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 		style: {
 			borderColor: 'blue',
 			borderStyle: 'rounded',
-			padding: 1
-		}
+			padding: 1,
+		},
 	});
 
 	const packages = getPackagesToInstall(setupAnswers);
@@ -108,6 +120,7 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 
 	const gitHookPackages = ['husky', 'lint-staged'];
 	const commitlintPackages = ['@commitlint/cli', '@commitlint/config-conventional'];
+
 	const eslintAndPrettierPackages = [
 		'eslint',
 		'prettier',
@@ -124,7 +137,7 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 		'@next/eslint-plugin-next',
 		'eslint-plugin-tailwindcss',
 		'prettier-plugin-tailwindcss',
-		'eslint-plugin-storybook'
+		'eslint-plugin-storybook',
 	];
 
 	const installedGitHookPackages = packages.filter((p) => gitHookPackages.includes(p));
@@ -152,7 +165,7 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 		type: 'confirm',
 		name: 'confirmInstall',
 		message: '✨ Proceed with installation?',
-		initial: true
+		initial: true,
 	});
 
 	if (!confirmInstall) {
@@ -161,11 +174,12 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 	}
 
 	const pm = detectPackageManager();
+
 	const pmIcons: Record<string, string> = {
 		npm: '📦',
 		yarn: '🧶',
 		pnpm: '📌',
-		bun: '🥟'
+		bun: '🥟',
 	};
 
 	consola.start(`${pmIcons[pm] || '📦'} Detected package manager: ${pc.cyan(pm)}`);
@@ -199,24 +213,27 @@ export const executeSetup = async (setupAnswers: SetupAnswers): Promise<void> =>
 				`  ${pc.gray('2.')} Commit with: ${pc.green('git commit -m "feat: your feature"')}`,
 				`  ${pc.gray('3.')} Hooks will automatically validate and format your code`,
 				'',
-				`${pc.gray('Example:')} ${pc.green('git commit -m "feat: add awesome feature"')}`
+				`${pc.gray('Example:')} ${pc.green('git commit -m "feat: add awesome feature"')}`,
 			].join('\n'),
 			style: {
 				borderColor: 'green',
 				borderStyle: 'rounded',
-				padding: 1
-			}
+				padding: 1,
+			},
 		});
 	} catch (error) {
 		consola.error('Failed to install packages');
+
 		if (error instanceof Error) {
 			consola.error(error.message);
 		}
+
 		process.exit(1);
 	}
 };
 
 export const runInteractiveSetup = async (): Promise<void> => {
 	const answers = await promptSetupAnswers();
+
 	await executeSetup(answers);
 };

@@ -45,7 +45,7 @@ export const installPackages = (pm: PackageManager, packages: string[], dev: boo
 	try {
 		execSync(command, {
 			stdio: 'inherit',
-			cwd: process.cwd()
+			cwd: process.cwd(),
 		});
 	} catch (error: any) {
 		console.error(`❌ Failed to install packages: ${error.message}`);
@@ -67,7 +67,7 @@ export const isPackageInstalled = (packageName: string): boolean => {
 		const allDeps = {
 			...packageJson.dependencies,
 			...packageJson.devDependencies,
-			...packageJson.peerDependencies
+			...packageJson.peerDependencies,
 		};
 
 		return !!allDeps[packageName];

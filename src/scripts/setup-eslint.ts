@@ -1,9 +1,10 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { SetupAnswers } from '../types/setup.js';
 import consola from 'consola';
 import pc from 'picocolors';
+
+import { SetupAnswers } from '../types/setup.js';
 
 const PRETTIER_BASE_CONFIG = {
 	useTabs: true,
@@ -15,7 +16,7 @@ const PRETTIER_BASE_CONFIG = {
 	arrowParens: 'always',
 	trailingComma: 'all',
 	endOfLine: 'auto',
-	plugins: [] as string[]
+	plugins: [] as string[],
 };
 
 interface EslintImports {
@@ -52,7 +53,10 @@ const getEslintImports = (answers: SetupAnswers): EslintImports => {
 		plugins.push('pluginStorybook()');
 	}
 
-	return { imports, plugins };
+	return {
+		imports,
+		plugins,
+	};
 };
 
 const getEslintTemplate = (imports: string[], plugins: string[]): string => {
@@ -72,14 +76,17 @@ export const setupEslint = (answers: SetupAnswers): void => {
 	consola.start('Setting up ESLint and Prettier...');
 
 	const prettierConfig = { ...PRETTIER_BASE_CONFIG };
+
 	if (answers.useTailwind) {
 		prettierConfig.plugins.push('prettier-plugin-tailwindcss');
 	}
 
 	const prettierrcPath = join(process.cwd(), '.prettierrc.json');
+
 	if (existsSync(prettierrcPath)) {
 		consola.info('Overwriting existing .prettierrc.json');
 	}
+
 	writeFileSync(prettierrcPath, JSON.stringify(prettierConfig, null, '\t') + '\n', 'utf8');
 	consola.success(`Created ${pc.cyan('.prettierrc.json')}`);
 
@@ -87,13 +94,16 @@ export const setupEslint = (answers: SetupAnswers): void => {
 	const eslintTemplate = getEslintTemplate(imports, plugins);
 
 	const eslintConfigPath = join(process.cwd(), 'eslint.config.mjs');
+
 	if (existsSync(eslintConfigPath)) {
 		consola.info('Overwriting existing eslint.config.mjs');
 	}
+
 	writeFileSync(eslintConfigPath, eslintTemplate, 'utf8');
 	consola.success(`Created ${pc.cyan('eslint.config.mjs')}`);
 
 	const packageJsonPath = join(process.cwd(), 'package.json');
+
 	if (existsSync(packageJsonPath)) {
 		try {
 			const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
