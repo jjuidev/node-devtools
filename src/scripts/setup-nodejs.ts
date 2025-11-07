@@ -6,6 +6,7 @@ import pc from 'picocolors';
 
 import { executeSetup } from './interactive-setup.js';
 import { SetupAnswers } from '../types/setup.js';
+import { createGitignore } from '../utils/create-gitignore.js';
 import { detectPackageManager, installPackages } from '../utils/package-manager.js';
 
 interface TsConfig {
@@ -120,18 +121,22 @@ export const setupNodejsProject = async (): Promise<void> => {
 	consola.start(`${pmIcons[pm] || '📦'} Detected package manager: ${pc.cyan(pm)}\n`);
 
 	try {
-		consola.info('📝 Step 1/4: Creating tsconfig.json...');
+		consola.info('📝 Step 1/5: Creating .gitignore...');
+		createGitignore();
+
+		consola.info('\n📝 Step 2/5: Creating tsconfig.json...');
 		createTsConfig();
 
-		consola.info('\n📄 Step 2/4: Updating package.json...');
+		consola.info('\n📄 Step 3/5: Updating package.json...');
 		updatePackageJson();
 
-		consola.info('\n📦 Step 3/4: Installing dependencies...');
+		consola.info('\n📦 Step 4/5: Installing dependencies...');
 		installNodeDevDependencies(pm);
 
 		consola.box({
 			title: '✨ Basic Setup Complete',
 			message: [
+				`${pc.green('✓')} .gitignore file created`,
 				`${pc.green('✓')} TypeScript configuration created`,
 				`${pc.green('✓')} Package.json updated`,
 				`${pc.green('✓')} Dev dependencies installed`,
@@ -149,10 +154,11 @@ export const setupNodejsProject = async (): Promise<void> => {
 			framework: 'node',
 			useTailwind: false,
 			useStorybook: false,
-			useTypescriptAlias: true
+			useTypescriptAlias: false,
+			useGitignore: false
 		};
 
-		consola.info('\n🔧 Step 4/4: Running devtools setup (Node.js + TypeScript alias)...\n');
+		consola.info('\n🔧 Step 5/5: Running devtools setup (Node.js + TypeScript alias)...\n');
 		await executeSetup(setupAnswers);
 	} catch (error) {
 		consola.error('❌ Setup failed');

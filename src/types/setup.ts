@@ -5,6 +5,7 @@ export interface SetupAnswers {
 	useTailwind: boolean;
 	useStorybook: boolean;
 	useTypescriptAlias: boolean;
+	useGitignore: boolean;
 }
 
 export interface PackageToInstall {
