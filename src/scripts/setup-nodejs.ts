@@ -3,6 +3,7 @@ import { join } from 'path';
 
 import consola from 'consola';
 import pc from 'picocolors';
+import prompts from 'prompts';
 
 import { executeSetup } from './interactive-setup.js';
 import { SetupAnswers } from '../types/setup.js';
@@ -150,15 +151,30 @@ export const setupNodejsProject = async (): Promise<void> => {
 			}
 		});
 
+		const { useTypescriptAlias } = await prompts(
+			{
+				type: 'confirm',
+				name: 'useTypescriptAlias',
+				message: '📂 Do you want to use TypeScript alias imports?',
+				initial: true
+			},
+			{
+				onCancel: () => {
+					consola.warn('\nSetup cancelled by user');
+					process.exit(0);
+				}
+			}
+		);
+
 		const setupAnswers: SetupAnswers = {
 			framework: 'node',
 			useTailwind: false,
 			useStorybook: false,
-			useTypescriptAlias: false,
+			useTypescriptAlias: useTypescriptAlias ?? false,
 			useGitignore: false
 		};
 
-		consola.info('\n🔧 Step 5/5: Running devtools setup (Node.js + TypeScript alias)...\n');
+		consola.info('\n🔧 Step 5/5: Running devtools setup...\n');
 		await executeSetup(setupAnswers);
 	} catch (error) {
 		consola.error('❌ Setup failed');
