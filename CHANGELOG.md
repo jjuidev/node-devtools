@@ -1,5 +1,17 @@
 # @jjuidev/node-devtools
 
+## 1.4.9
+
+### Patch Changes
+
+- Fix setup nodejs script force main entry point
+
+## 1.4.8
+
+### Patch Changes
+
+- Fix setup nodejs script force main entry point
+
 ## 1.4.6
 
 ### Patch Changes
