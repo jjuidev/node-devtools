@@ -1,5 +1,11 @@
 # @jjuidev/node-devtools
 
+## 1.5.0
+
+### Minor Changes
+
+- Add script interactive-setup with answer .gitignore file.
+
 ## 1.4.11
 
 ### Patch Changes
