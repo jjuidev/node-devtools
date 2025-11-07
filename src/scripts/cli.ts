@@ -3,10 +3,12 @@ import { program } from 'commander';
 import { runInteractiveSetup } from './interactive-setup.js';
 import { setupNodejsProject } from './setup-nodejs.js';
 
+import packageJson from '../../package.json' with { type: 'json' };
+
 program
 	.name('node-devtools')
 	.description('Interactive devtools (commitlint, eslint, prettier,...) setup for Node.js projects')
-	.version('1.4.6');
+	.version(packageJson.version);
 
 // Default command - Interactive setup
 program
