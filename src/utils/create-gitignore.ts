@@ -5,7 +5,6 @@ import consola from 'consola';
 
 const GITIGNORE_CONTENT = `
 # dependencies
-
 node_modules
 
 # package manager lockfiles
@@ -55,10 +54,9 @@ export const createGitignore = (): void => {
 		consola.success('✓ Created/updated .gitignore file');
 	} catch (error) {
 		consola.error('❌ Failed to create .gitignore file');
-		
+
 		if (error instanceof Error) {
 			consola.error(error.message);
 		}
 	}
 };
-
