@@ -67,7 +67,7 @@ export const eslintConfigNode = defineEslintConfig(
 			'autofix/no-lonely-if': 'error',
 			'autofix/no-else-return': 'error',
 			'autofix/object-shorthand': 'error',
-			'autofix/arrow-body-style': 'error',
+			'autofix/arrow-body-style': ['error', 'as-needed'],
 			'autofix/object-curly-newline': [
 				'error',
 				{

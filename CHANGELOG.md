@@ -1,5 +1,11 @@
 # @jjuidev/node-devtools
 
+## 1.5.2
+
+### Patch Changes
+
+- Add eslint clean style rules
+
 ## 1.5.1
 
 ### Patch Changes
