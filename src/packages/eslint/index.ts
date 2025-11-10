@@ -33,7 +33,7 @@ export const defineEslintConfig = async (...configs: any[]) => {
 			}
 
 			return config;
-		}),
+		})
 	);
 
 	return defineConfig(...resolvedConfigs.flat());
@@ -45,9 +45,9 @@ export const eslintConfigNode = defineEslintConfig(
 		languageOptions: {
 			globals: {
 				...globals.node,
-				...globals.browser,
-			},
-		},
+				...globals.browser
+			}
+		}
 	},
 
 	pluginJs.configs.recommended,
@@ -57,7 +57,7 @@ export const eslintConfigNode = defineEslintConfig(
 		plugins: {
 			import: pluginImport,
 			'prefer-arrow-functions': pluginPreferArrowFunctions,
-			autofix: plugAutofix,
+			autofix: plugAutofix
 		},
 
 		rules: {
@@ -66,17 +66,18 @@ export const eslintConfigNode = defineEslintConfig(
 			'autofix/curly': 'error',
 			'autofix/no-lonely-if': 'error',
 			'autofix/no-else-return': 'error',
+			'autofix/object-shorthand': 'error',
+			'autofix/arrow-body-style': 'error',
 			'autofix/object-curly-newline': [
 				'error',
 				{
 					ObjectExpression: {
 						multiline: true,
 						minProperties: 2,
-						consistent: true,
-					},
-				},
+						consistent: true
+					}
+				}
 			],
-			'object-shorthand': 'warn',
 
 			// @typescript-eslint
 			'@typescript-eslint/no-unused-vars': 'warn',
@@ -97,17 +98,17 @@ export const eslintConfigNode = defineEslintConfig(
 					'newlines-between': 'always',
 					alphabetize: {
 						order: 'asc',
-						caseInsensitive: true,
+						caseInsensitive: true
 					},
 					pathGroups: [
 						{
 							pattern: '@/**',
-							group: 'internal',
-						},
+							group: 'internal'
+						}
 					],
 
-					groups: ['builtin', 'external', ['internal', 'parent', 'sibling', 'index'], ['object', 'unknown', 'type']],
-				},
+					groups: ['builtin', 'external', ['internal', 'parent', 'sibling', 'index'], ['object', 'unknown', 'type']]
+				}
 			],
 
 			// Others rules
@@ -116,31 +117,31 @@ export const eslintConfigNode = defineEslintConfig(
 				{
 					blankLine: 'any',
 					prev: 'export',
-					next: 'export',
+					next: 'export'
 				},
 				{
 					blankLine: 'always',
 					prev: ['const', 'let', 'var'],
-					next: '*',
+					next: '*'
 				},
 				{
 					blankLine: 'any',
 					prev: ['const', 'let', 'var'],
-					next: ['const', 'let', 'var'],
+					next: ['const', 'let', 'var']
 				},
 				{
 					blankLine: 'always',
 					prev: '*',
-					next: ['function', 'multiline-const', 'multiline-block-like'],
+					next: ['function', 'multiline-const', 'multiline-block-like']
 				},
 				{
 					blankLine: 'always',
 					prev: ['function', 'multiline-const', 'multiline-block-like'],
-					next: '*',
-				},
-			],
-		},
-	},
+					next: '*'
+				}
+			]
+		}
+	}
 );
 
 export const pluginReact = () => {
@@ -148,20 +149,20 @@ export const pluginReact = () => {
 		const [pluginReact, pluginReactHooks, pluginReactNative] = await Promise.all([
 			loadModule('eslint-plugin-react'),
 			loadModule('eslint-plugin-react-hooks'),
-			loadModule('eslint-plugin-react-native'),
+			loadModule('eslint-plugin-react-native')
 		]);
 
 		return defineEslintConfig({
 			settings: {
 				react: {
-					version: 'detect',
-				},
+					version: 'detect'
+				}
 			},
 
 			plugins: {
 				react: pluginReact,
 				'react-native': pluginReactNative,
-				'react-hooks': pluginReactHooks,
+				'react-hooks': pluginReactHooks
 			},
 
 			rules: {
@@ -182,8 +183,8 @@ export const pluginReact = () => {
 
 				// eslint-plugin-react-hooks
 				'react-hooks/rules-of-hooks': 'error',
-				'react-hooks/exhaustive-deps': 'warn',
-			},
+				'react-hooks/exhaustive-deps': 'warn'
+			}
 		});
 	})();
 };
@@ -194,14 +195,14 @@ export const pluginNext = () => {
 
 		return defineEslintConfig(pluginReact(), {
 			plugins: {
-				'@next/next': pluginNext,
+				'@next/next': pluginNext
 			},
 
 			rules: {
 				// eslint-plugin-next
 				...pluginNext.configs.recommended.rules,
-				...pluginNext.configs['core-web-vitals'].rules,
-			},
+				...pluginNext.configs['core-web-vitals'].rules
+			}
 		});
 	})();
 };
@@ -213,14 +214,14 @@ export const pluginStorybook = () => {
 		return [
 			{
 				plugins: {
-					storybook: pluginStorybook,
+					storybook: pluginStorybook
 				},
 
 				rules: {
 					// eslint-plugin-storybook
-					...pluginStorybook.configs.recommended.rules,
-				},
-			},
+					...pluginStorybook.configs.recommended.rules
+				}
+			}
 		];
 	})();
 };

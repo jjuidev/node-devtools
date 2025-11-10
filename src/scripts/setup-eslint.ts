@@ -10,13 +10,13 @@ const PRETTIER_BASE_CONFIG = {
 	useTabs: true,
 	tabWidth: 2,
 	printWidth: 120,
-	semi: true,
+	semi: false,
 	singleQuote: true,
 	jsxSingleQuote: false,
 	arrowParens: 'always',
-	trailingComma: 'all',
+	trailingComma: 'none',
 	endOfLine: 'auto',
-	plugins: [] as string[],
+	plugins: [] as string[]
 };
 
 interface EslintImports {
@@ -55,7 +55,7 @@ const getEslintImports = (answers: SetupAnswers): EslintImports => {
 
 	return {
 		imports,
-		plugins,
+		plugins
 	};
 };
 
